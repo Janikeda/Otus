@@ -4,17 +4,17 @@ import java.util.LinkedList;
 
 public class CustomerReverseOrder {
 
-    private final LinkedList<Customer> queue;
+    private final LinkedList<Customer> stack;
 
     public CustomerReverseOrder() {
-        queue = new LinkedList<>();
+        stack = new LinkedList<>();
     }
 
     public void add(Customer customer) {
-        queue.push(customer);
+        stack.push(customer);
     }
 
     public Customer take() {
-        return queue.pop();
+        return stack.pop();
     }
 }
