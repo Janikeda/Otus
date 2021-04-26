@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 public class TestAnnotationProcessor<T> {
 
-    public String testAnnotationProcessor(Class<T> clazz) {
+    public Result testAnnotationProcessor(Class<T> clazz) {
         List<Method> testMethods = findAnnotatedMethods(clazz, Test.class);
 
         List<Method> beforeMethods = findAnnotatedMethods(clazz, Before.class).stream()
@@ -45,10 +45,10 @@ public class TestAnnotationProcessor<T> {
                 success--;
             }
         }
-        return String.format(
+        return new Result(String.format(
             "Статистика тестового класса %s. Всего тестов: %s, прошли успешно: %s, провалено: %s",
             clazz.getSimpleName(),
-            testMethods.size(), success, failures);
+            testMethods.size(), success, failures));
     }
 
     private void forEach(T object, List<Method> methods) {
