@@ -84,4 +84,13 @@ class AtmTest {
         assertThrows(AtmException.class, () -> atm.getMoney(33),
             "Сумма к выдаче должна быть кратна 5");
     }
+
+    @Test
+    void getMoney5() {
+        atm.putMoney(banknotes);
+        long amount = 100_000;
+        assertThrows(AtmException.class, () -> atm.getMoney(amount),
+            "\nДля вашего запроса " + amount + " не достаточно средств.\nНа счету: "
+                + atm.checkBalanceAmount().getAmount() + "");
+    }
 }
