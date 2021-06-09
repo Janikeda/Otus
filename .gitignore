@@ -32,7 +32,7 @@ build
 out
 
 #Idea
+.idea
 *.iml
 *.iws
 *.ipr
-*.idea
