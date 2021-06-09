@@ -35,9 +35,8 @@ public class HistoryListener implements Listener, HistoryReader {
         Builder builder = msg.toBuilder();
         List<Method> fieldsToCopy = findAllFieldsToCopy(builder.getClass());
         for (Method method : fieldsToCopy) {
+            Class<?> classForCopy = method.getParameterTypes()[0];
             try {
-                Class<?> classForCopy = method.getParameterTypes()[0];
-
                 Method methodClone = classForCopy.getDeclaredMethod("clone");
                 String methodName = "get" + StringUtils.capitalize(method.getName());
 
