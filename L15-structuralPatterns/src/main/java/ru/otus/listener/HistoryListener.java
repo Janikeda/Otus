@@ -37,15 +37,17 @@ public class HistoryListener implements Listener, HistoryReader {
         for (Method method : fieldsToCopy) {
             Class<?> classForCopy = method.getParameterTypes()[0];
             try {
-                Method methodClone = classForCopy.getDeclaredMethod("clone");
-                String methodName = "get" + StringUtils.capitalize(method.getName());
-
-                Method declaredMethod = msg.getClass().getDeclaredMethod(methodName);
-                Object result = declaredMethod.invoke(msg);
-
-                if (result == null) {
+                Method methodClone;
+                try {
+                    methodClone = classForCopy.getDeclaredMethod("clone");
+                } catch (NoSuchMethodException e) {
                     continue;
                 }
+
+                String methodName = "get" + StringUtils.capitalize(method.getName());
+                Method declaredMethod = msg.getClass().getDeclaredMethod(methodName);
+
+                Object result = declaredMethod.invoke(msg);
                 Object copiedObject = methodClone.invoke(result);
 
                 method.invoke(builder, copiedObject);
@@ -60,8 +62,7 @@ public class HistoryListener implements Listener, HistoryReader {
         Method[] methods = clazz.getDeclaredMethods();
         return Arrays.stream(methods)
             .filter(method -> Arrays.stream(method.getParameterTypes()).count() == 1)
-            .filter(method -> Arrays.stream(method.getParameterTypes())
-                .allMatch(Cloneable.class::isAssignableFrom)).collect(Collectors.toList());
+            .collect(Collectors.toList());
     }
 
 }

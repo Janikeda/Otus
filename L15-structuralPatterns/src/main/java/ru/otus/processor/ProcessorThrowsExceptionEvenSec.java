@@ -1,20 +1,36 @@
 package ru.otus.processor;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import org.apache.commons.lang3.StringUtils;
 import ru.otus.exception.ProcessorCustomException;
+import ru.otus.model.Memento;
+import ru.otus.model.Message;
 
-public class ProcessorThrowsExceptionEvenSec {
+public class ProcessorThrowsExceptionEvenSec implements MessageProcessor {
 
-    public void process(Instant currentTime) throws ProcessorCustomException {
-        int second = defineSecond(currentTime.toString());
+    private final DateTimeProvider dateTimeProvider;
+    private Memento memento;
+
+    public ProcessorThrowsExceptionEvenSec(DateTimeProvider dateTimeProvider) {
+        this.dateTimeProvider = dateTimeProvider;
+    }
+
+    @Override
+    public Message process(Message message) {
+        LocalDateTime date = dateTimeProvider.getDate();
+        int second = defineSecond(date.toString());
         if (second % 2 == 0) {
             String mes = "Выброс ProcessorCustomException в четную секунду: " + second;
-            System.out.println(mes);
+            memento = new Memento(date, mes);
             throw new ProcessorCustomException(mes);
         } else {
-            System.out.println("ProcessorCustomException не выброшено, секунда " + second);
+            memento = new Memento(date, "ProcessorCustomException не выброшено, секунда " + second);
         }
+        return message;
+    }
+
+    public Memento getMemento() {
+        return memento;
     }
 
     int defineSecond(String time) {
