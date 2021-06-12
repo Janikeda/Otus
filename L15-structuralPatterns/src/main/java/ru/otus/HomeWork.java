@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import ru.otus.handler.ComplexProcessor;
+import ru.otus.listener.DeepCopyServiceSecondImpl;
 import ru.otus.listener.HistoryListener;
 import ru.otus.model.Message;
 import ru.otus.model.ObjectForMessage;
@@ -22,7 +23,7 @@ public class HomeWork {
 
         var complexProcessor = new ComplexProcessor(processors, ex -> {
         });
-        var historyListener = new HistoryListener(new MessageRepository());
+        var historyListener = new HistoryListener(new MessageRepository(), new DeepCopyServiceSecondImpl());
         complexProcessor.addListener(historyListener);
 
         ObjectForMessage objectForMessage = new ObjectForMessage();

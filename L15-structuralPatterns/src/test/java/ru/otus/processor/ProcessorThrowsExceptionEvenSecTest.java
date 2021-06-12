@@ -1,33 +1,37 @@
 package ru.otus.processor;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDateTime;
-import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.otus.exception.ProcessorCustomException;
-import ru.otus.model.Memento;
 import ru.otus.model.Message;
 
 class ProcessorThrowsExceptionEvenSecTest {
 
-    @Test
-    void process() {
-        ProcessorThrowsExceptionEvenSec processor = new ProcessorThrowsExceptionEvenSec(
-            LocalDateTime::now);
-        Message message = new Message.Builder(1L).build();
+    Message message;
 
-        try {
-            processor.process(message);
-            Memento memento = processor.getMemento();
-            int second = processor.defineSecond(memento.getCreatedAt().toString());
-            assertTrue(second % 2 != 0);
-        } catch (ProcessorCustomException e) {
-            int second = Integer.parseInt(StringUtils.substringAfter(e.getMessage(), ": "));
-            assertEquals(0, second % 2);
-            assertTrue(
-                e.getMessage().startsWith("Выброс ProcessorCustomException в четную секунду: "));
-        }
+    @BeforeEach
+    void setUp() {
+        message = new Message.Builder(1L).build();
+    }
+
+    @Test
+    void process_Even() {
+        ProcessorThrowsExceptionEvenSec processor = new ProcessorThrowsExceptionEvenSec(
+            () -> LocalDateTime.of(2021, 6, 12, 12, 12, 2));
+
+        assertThrows(ProcessorCustomException.class, () -> processor.process(message));
+    }
+
+    @Test
+    void process_Odd() {
+        ProcessorThrowsExceptionEvenSec processor = new ProcessorThrowsExceptionEvenSec(
+            () -> LocalDateTime.of(2021, 6, 12, 12, 12, 3));
+        message = new Message.Builder(1L).build();
+
+        assertDoesNotThrow(() -> processor.process(message));
     }
 }

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import ru.otus.listener.DeepCopyServiceFirstImpl;
 import ru.otus.listener.HistoryListener;
 import ru.otus.model.Message;
 import ru.otus.model.ObjectForMessage;
@@ -19,7 +20,8 @@ class HistoryListenerTest {
     void ListenerTest() {
         //given
         var messageRepository = new MessageRepository();
-        var historyListener = new HistoryListener(messageRepository);
+        var deepCopyService = new DeepCopyServiceFirstImpl();
+        var historyListener = new HistoryListener(messageRepository, deepCopyService);
 
         var id = 100L;
         var data = "33";
