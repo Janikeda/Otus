@@ -29,15 +29,6 @@ public class EntityClassMetaDataImpl implements EntityClassMetaData {
 
     @Override
     public <T> Constructor<T> getConstructor() throws NoSuchMethodException {
-//        Class<?>[] argumentTypes = new Class[clazzFields.size()];
-//        clazzFields
-//            .stream()
-//            .map(Field::getType)
-//            .collect(Collectors.toList())
-//            .toArray(argumentTypes);
-//        return (Constructor<T>) clazz.getDeclaredConstructor(argumentTypes);
-//        return Arrays.stream(clazz.getConstructors())
-//            .filter(constructor -> constructor.getParameterCount() == 0).findFirst().orElseThrow();
         return (Constructor<T>) clazz.getConstructor(null);
     }
 
