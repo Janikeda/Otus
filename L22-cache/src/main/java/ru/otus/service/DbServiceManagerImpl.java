@@ -17,11 +17,11 @@ public class DbServiceManagerImpl implements DataBaseApi<Manager> {
 
     private final DataTemplate<Manager> managerDataTemplate;
     private final TransactionRunner transactionRunner;
-    private final HwCache<Long, Manager> managerCache;
+    private final HwCache<String, Manager> managerCache;
 
     public DbServiceManagerImpl(TransactionRunner transactionRunner,
         DataTemplate<Manager> managerDataTemplate,
-        HwCache<Long, Manager> managerCache) {
+        HwCache<String, Manager> managerCache) {
         this.transactionRunner = transactionRunner;
         this.managerDataTemplate = managerDataTemplate;
         this.managerCache = managerCache;
@@ -40,18 +40,21 @@ public class DbServiceManagerImpl implements DataBaseApi<Manager> {
             log.info("updated manager: {}", manager);
             return manager;
         });
-        cacheOperation(cache -> cache.put(result.getId(), result));
+        cacheOperation(cache -> cache.put(String.valueOf(result.getId()), result));
         return result;
     }
 
     @Override
     public Optional<Manager> getById(long no) {
-        Manager manager = cacheOperationWithResult(cache -> cache.get(no));
+        Manager manager = cacheOperationWithResult(cache -> cache.get(String.valueOf(no)));
         if (manager != null) {
             return Optional.of(manager);
         }
         return transactionRunner.doInTransaction(connection -> {
             var managerOptional = managerDataTemplate.findById(connection, no);
+            managerOptional.ifPresent(
+                result ->
+                    cacheOperation(cache -> cache.put(String.valueOf(result.getId()), result)));
             //log.info("manager: {}", managerOptional);
             return managerOptional;
         });
@@ -72,16 +75,16 @@ public class DbServiceManagerImpl implements DataBaseApi<Manager> {
             managerDataTemplate.delete(connection, id);
             return id;
         });
-        cacheOperation(cache -> cache.remove(id));
+        cacheOperation(cache -> cache.remove(String.valueOf(id)));
     }
 
-    private void cacheOperation(Consumer<HwCache<Long, Manager>> action) {
+    private void cacheOperation(Consumer<HwCache<String, Manager>> action) {
         if (managerCache != null) {
             action.accept(managerCache);
         }
     }
 
-    private Manager cacheOperationWithResult(Function<HwCache<Long, Manager>, Manager> action) {
+    private Manager cacheOperationWithResult(Function<HwCache<String, Manager>, Manager> action) {
         Manager result = null;
         if (managerCache != null) {
             result = action.apply(managerCache);

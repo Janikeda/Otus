@@ -50,10 +50,10 @@ public class HomeWork {
         var dataTemplateClient = new DataTemplateJdbc<>(dbExecutor,
             entitySQLMetaDataClient, dataGeneratorClient); //реализация DataTemplate, универсальная
 
-        var clientCache = new MyCache<Long, Client>(4);
-        HwListener<Long, Client> listener = new HwListener<>() {
+        var clientCache = new MyCache<String, Client>(4);
+        HwListener<String, Client> listener = new HwListener<>() {
             @Override
-            public void notify(Long key, Client value, EventType action) {
+            public void notify(String key, Client value, EventType action) {
                 if (action == EventType.CREATED) {
                     log.info("key:{}, value:{}, action: {}", key, value, action);
                 }
@@ -94,7 +94,7 @@ public class HomeWork {
         var dataTemplateManager = new DataTemplateJdbc<>(dbExecutor,
             entitySQLMetaDataManager, dataGeneratorManager);
 
-        var managerCache = new MyCache<Long, Manager>(7);
+        var managerCache = new MyCache<String, Manager>(7);
         var dbServiceManagerWithCache = new DbServiceManagerImpl(transactionRunner,
             dataTemplateManager,
             managerCache);

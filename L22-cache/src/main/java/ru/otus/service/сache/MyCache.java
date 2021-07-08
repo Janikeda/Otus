@@ -18,9 +18,9 @@ public class MyCache<K, V> implements HwCache<K, V> {
 
     @Override
     public void put(K key, V value) {
-        notify(key, value, EventType.CREATED);
         if (CACHE.size() < cacheSize) {
             CACHE.put(key, value);
+            notify(key, value, EventType.CREATED);
         }
     }
 

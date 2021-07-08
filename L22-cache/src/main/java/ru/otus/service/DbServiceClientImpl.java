@@ -18,11 +18,11 @@ public class DbServiceClientImpl implements DataBaseApi<Client> {
 
     private final DataTemplate<Client> clientDataTemplate;
     private final TransactionRunner transactionRunner;
-    private final HwCache<Long, Client> clientCache;
+    private final HwCache<String, Client> clientCache;
 
 
     public DbServiceClientImpl(TransactionRunner transactionRunner,
-        DataTemplate<Client> clientDataTemplate, HwCache<Long, Client> clientCache) {
+        DataTemplate<Client> clientDataTemplate, HwCache<String, Client> clientCache) {
         this.transactionRunner = transactionRunner;
         this.clientDataTemplate = clientDataTemplate;
         this.clientCache = clientCache;
@@ -42,19 +42,22 @@ public class DbServiceClientImpl implements DataBaseApi<Client> {
 
             return client;
         });
-        cacheOperation(cache -> cache.put(result.getId(), result));
+        cacheOperation(cache -> cache.put(String.valueOf(result.getId()), result));
         return result;
     }
 
     @Override
     public Optional<Client> getById(long id) {
-        Client client = cacheOperationWithResult(cache -> cache.get(id));
+        Client client = cacheOperationWithResult(cache -> cache.get(String.valueOf(id)));
         if (client != null) {
             return Optional.of(client);
         }
 
         return transactionRunner.doInTransaction(connection -> {
             var clientOptional = clientDataTemplate.findById(connection, id);
+            clientOptional.ifPresent(
+                result ->
+                    cacheOperation(cache -> cache.put(String.valueOf(result.getId()), result)));
             //log.info("client: {}", clientOptional);
             return clientOptional;
         });
@@ -66,7 +69,7 @@ public class DbServiceClientImpl implements DataBaseApi<Client> {
             clientDataTemplate.delete(connection, id);
             return id;
         });
-        cacheOperation(cache -> cache.remove(id));
+        cacheOperation(cache -> cache.remove(String.valueOf(id)));
     }
 
     @Override
@@ -78,13 +81,13 @@ public class DbServiceClientImpl implements DataBaseApi<Client> {
         });
     }
 
-    private void cacheOperation(Consumer<HwCache<Long, Client>> action) {
+    private void cacheOperation(Consumer<HwCache<String, Client>> action) {
         if (clientCache != null) {
             action.accept(clientCache);
         }
     }
 
-    private Client cacheOperationWithResult(Function<HwCache<Long, Client>, Client> action) {
+    private Client cacheOperationWithResult(Function<HwCache<String, Client>, Client> action) {
         Client result = null;
         if (clientCache != null) {
             result = action.apply(clientCache);
