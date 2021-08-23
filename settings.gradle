@@ -10,5 +10,4 @@ include 'L15-structuralPatterns'
 include 'L18-jdbc'
 include 'L21-jpql'
 include 'L22-cache'
-include 'L31-multithreading'
-
+include 'L25-di'
