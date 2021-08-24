@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.otus.dto.ClientDto;
 import ru.otus.service.ClientService;
 
@@ -18,18 +19,19 @@ public class ClientsController {
     }
 
     @RequestMapping(value = "/clients", method = RequestMethod.GET)
-    public String init(Model model) {
+    public String getClients(Model model) {
         List<ClientDto> clients = clientService.findAll();
         model.addAttribute("clients", clients);
         return "clients";
     }
 
-    @RequestMapping(value = {"/create"}, method = RequestMethod.POST)
-    public String addPersonSave(Model model, ClientDto client) {
-        boolean result = clientService.saveClient(client);
-        if (!result) {
-            String error = "Ошибка при создании клиента: " + client.getName();
-            model.addAttribute("errorMessage", error);
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    public String addClient(ClientDto client, RedirectAttributes redirectAttributes) {
+        if (client.getName() == null || client.getName().isBlank()) {
+            String error = "Ошибка при создании клиента. Нужно указать имя!";
+            redirectAttributes.addFlashAttribute("errorMessage", error);
+        } else {
+            clientService.saveClient(client);
         }
         return "redirect:/clients";
     }

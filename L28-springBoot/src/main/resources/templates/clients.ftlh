@@ -7,9 +7,9 @@
 
 <body>
 <#if errorMessage??>
-    <div style="color:red;font-style:italic;">
+    <div style="color:red;font-size: x-large">
         ${errorMessage}
-    </div>
+    </div><br/><br/>
 </#if>
 <div>
     <form action="/create" method="post">

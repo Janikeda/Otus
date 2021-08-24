@@ -2,13 +2,13 @@ package ru.otus.dto;
 
 public class ClientDto {
 
-    public String id;
+    private String id;
 
-    public String name;
+    private String name;
 
-    public String street;
+    private String street;
 
-    public String numbers;
+    private String numbers;
 
     public ClientDto() {
     }
