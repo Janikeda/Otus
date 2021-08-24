@@ -1,0 +1,46 @@
+<html xmlns="http://www.w3.org/1999/xhtml" content="text/html;">
+<head>
+  <link href="css/style.css" rel="stylesheet"/>
+  <title>Клиенты</title>
+</head>
+
+<body>
+<form action="clients?action=submit" method="post">
+  <label class="placeholder-box">
+    <input required type="text" name="clientNameInput">
+    <div class="placeholder-text">Введите имя клиента <strong style="color: red;">*</strong></div>
+  </label>
+  <label class="placeholder-box">
+    <input required type="text" name="addressInput">
+    <div class="placeholder-text">Введите адрес клиента</div>
+  </label>
+  <label class="placeholder-box">
+    <input required type="text" name="phones">
+    <div class="placeholder-text">Введите телефон(ы) (через запятую)</div>
+  </label>
+  <input type="submit" value="Сохранить клиента"/>
+</form>
+
+<h4>Список клиентов</h4>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Address</th>
+      <th>Phones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <#list data![] as client>
+      <tr>
+        <td>${client.id}</td>
+        <td>${client.name}</td>
+        <td>${client.street}</td>
+        <td>${client.numbers}</td>
+      </tr>
+    </#list>
+  </tbody>
+</table>
+</body>
+</html>
