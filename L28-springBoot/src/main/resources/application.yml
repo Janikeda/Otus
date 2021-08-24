@@ -5,9 +5,6 @@ spring:
     password: pwd
   flyway:
     enabled: true
-  freemarker:
-    template-loader-path: classpath:/templates
-    suffix: .ftlh
 
 logging:
   level:
