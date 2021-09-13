@@ -1,4 +1,4 @@
-package homework;
+package ru.otus;
 
 import com.sun.management.GarbageCollectionNotificationInfo;
 import java.lang.management.GarbageCollectorMXBean;
