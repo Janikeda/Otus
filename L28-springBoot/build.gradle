@@ -1,0 +1,19 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.5.4'
+}
+
+sourceCompatibility = JavaVersion.VERSION_14
+targetCompatibility = JavaVersion.VERSION_14
+
+dependencies {
+    dependencies {
+        implementation 'ch.qos.logback:logback-classic'
+        implementation 'org.flywaydb:flyway-core'
+        implementation 'org.postgresql:postgresql'
+        implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+
+        implementation group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version: '2.5.4'
+        implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.5.4'
+    }
+}
