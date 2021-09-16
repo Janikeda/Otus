@@ -1,0 +1,56 @@
+.table {
+    width: 100%;
+    margin-bottom: 20px;
+    border: 1px solid #dddddd;
+    border-collapse: collapse;
+}
+
+.table th {
+    font-weight: bold;
+    padding: 5px;
+    background: #efefef;
+    border: 1px solid #dddddd;
+}
+
+.table td {
+    border: 1px solid #dddddd;
+    padding: 5px;
+}
+
+.placeholder-box {
+    display: block;
+    position: relative;
+    margin: 20px 0;
+}
+
+.placeholder-box input {
+    display: block;
+    box-sizing: border-box;
+    width: 35%;
+    height: 35px;
+    line-height: 35px;
+    padding: 0 10px;
+    font-size: 14px;
+    font-weight: 400;
+    color: #495057;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+}
+
+.placeholder-text {
+    display: none;
+    width: 100%;
+    line-height: 37px;
+    position: absolute;
+    left: 10px;
+    top: 0;
+    bottom: 0;
+    color: #888;
+    cursor: text;
+    user-select: none;
+}
+
+.placeholder-box input:invalid + .placeholder-text {
+    display: block;
+}
