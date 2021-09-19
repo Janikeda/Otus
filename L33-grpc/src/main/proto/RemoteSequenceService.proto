@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package ru.otus.protobuf.generated;
+
+option java_multiple_files = true;
+
+message AppMessage {
+    int32 firstNumber = 1;
+    int32 lastNumber = 2;
+}
+
+message BasicMessage {
+    int32 value = 1;
+}
+
+service NumbersServerService {
+    rpc getSequence(AppMessage) returns (stream BasicMessage);
+}
