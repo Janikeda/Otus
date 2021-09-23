@@ -13,7 +13,7 @@ public class ClientStreamObserver implements StreamObserver<BasicMessage> {
 
     @Override
     public void onNext(BasicMessage value) {
-        this.lastVal = value.getValue();
+        setLastVal(value.getValue());
         logger.info("new value: {}", lastVal);
     }
 
@@ -27,9 +27,13 @@ public class ClientStreamObserver implements StreamObserver<BasicMessage> {
         logger.info("ClientStreamObserver job is done");
     }
 
-    int getLastValWithRefreshing() {
+    synchronized int getLastValWithRefreshing() {
         int result = this.lastVal;
         this.lastVal = 0;
         return result;
+    }
+
+    private synchronized void setLastVal(int value) {
+        this.lastVal = value;
     }
 }
