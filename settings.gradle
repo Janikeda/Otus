@@ -17,3 +17,5 @@ include 'L28-springBoot'
 
 include 'L32-messageSystem:SpringBootApp'
 include 'L32-messageSystem:MessageSystem'
+include 'L33-grpc'
+
